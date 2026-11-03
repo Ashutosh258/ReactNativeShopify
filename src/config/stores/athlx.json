@@ -1,0 +1,65 @@
+{
+  "id": "athlx",
+  "name": "ATHLX",
+  "build": {
+    "appName": "ATHLX",
+    "slug": "athlx",
+    "bundleId": "com.demo.athlx",
+    "scheme": "athlx",
+    "splashBackground": "#000000"
+  },
+  "branding": {
+    "logoText": "ATHLX",
+    "tagline": "Built for the lift. Made to move.",
+    "colors": {
+      "primary": "#000000",
+      "onPrimary": "#FFFFFF",
+      "background": "#FFFFFF",
+      "surface": "#F3F3F3",
+      "text": "#000000",
+      "muted": "#6B6B6B",
+      "border": "#E1E1E1",
+      "accent": "#1F5FFF",
+      "danger": "#D0021B",
+      "success": "#0A7D38"
+    },
+    "radius": 2,
+    "uppercaseHeadings": true,
+    "headingLetterSpacing": 1
+  },
+  "locale": "en-US",
+  "welcome": {
+    "slides": [
+      {
+        "title": "Train harder",
+        "body": "Performance gymwear engineered for every set, every rep."
+      },
+      {
+        "title": "New drops weekly",
+        "body": "Be first to the latest seamless, lifting and running ranges."
+      },
+      {
+        "title": "Free shipping",
+        "body": "On orders over $75. Easy 30-day returns."
+      }
+    ]
+  },
+  "catalog": {
+    "homeCollection": "new-releases",
+    "heroTitle": "NEW SEASON",
+    "heroSubtitle": "Seamless sets, lifting essentials and more."
+  },
+  "commerce": {
+    "provider": "mock",
+    "latencyMs": 600
+  },
+  "features": {
+    "freeShippingThreshold": 75
+  },
+  "integrations": {
+    "reviews": {
+      "provider": "judgeme",
+      "simulateOutage": false
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "verde",
+  "name": "Verde Yoga Co.",
+  "build": {
+    "appName": "Verde Yoga",
+    "slug": "verde-yoga",
+    "bundleId": "com.demo.verdeyoga",
+    "scheme": "verdeyoga",
+    "splashBackground": "#2F5D46"
+  },
+  "branding": {
+    "logoText": "verde",
+    "tagline": "Slow movement, sustainably made.",
+    "colors": {
+      "primary": "#2F5D46",
+      "onPrimary": "#FFF8EE",
+      "background": "#FFF8EE",
+      "surface": "#F1E8DA",
+      "text": "#1E2A22",
+      "muted": "#6F7A70",
+      "border": "#E2D7C5",
+      "accent": "#C46A3C",
+      "danger": "#B3261E",
+      "success": "#2F5D46"
+    },
+    "radius": 14,
+    "uppercaseHeadings": false,
+    "headingLetterSpacing": 0
+  },
+  "locale": "en-GB",
+  "welcome": {
+    "slides": [
+      {
+        "title": "Welcome to Verde",
+        "body": "Organic cotton yoga wear, designed to breathe."
+      },
+      {
+        "title": "Mindfully made",
+        "body": "Every piece traced from farm to studio."
+      }
+    ]
+  },
+  "catalog": {
+    "homeCollection": "studio",
+    "heroTitle": "The Studio Edit",
+    "heroSubtitle": "Soft layers for slow flows."
+  },
+  "commerce": {
+    "provider": "mock",
+    "latencyMs": 900
+  },
+  "features": {
+    "freeShippingThreshold": null
+  },
+  "integrations": {
+    "reviews": {
+      "provider": "judgeme",
+      "simulateOutage": true
+    }
+  }
+}
