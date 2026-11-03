@@ -65,15 +65,6 @@ To build a store-specific binary: `STORE=verde npx eas-cli@latest build --profil
 3. For sample mode, add fixtures in `src/data/commerce/mock/fixtures.ts`. For a live store, set the `SHOPIFY_*` env vars.
 4. Start it with `node scripts/store.mjs <id>`.
 
-## Walkthrough script (3 min)
-
-1. **ATHLX:** welcome → Skip → home grid (Sale / Bestseller / Sold out badges, free-shipping bar).
-2. **Vital Seamless Leggings:** Black / XL is struck through (sold out). Black / M shows "Only 2 left". Add it twice, and the CTA changes to "Max quantity in bag". Reviews load (mocked Judge.me).
-3. **Arrival Shorts:** Navy / XS is a disabled, non-existent combination.
-4. **Bag:** change quantity, watch the free-shipping progress, remove an item, check out → sample checkout screen → "Simulate order placed" → empty bag state.
-5. Add an item, kill the app and reopen it: the bag is restored and the welcome screen is skipped.
-6. `npm run store:verde`: new name, colors, rounded UI, GBP, no free-shipping bar. On a product page, **Reviews are unavailable**, but shopping still works.
-7. `--simulate-errors`: error screen → Try again.
 
 ## Platforms tested
 
