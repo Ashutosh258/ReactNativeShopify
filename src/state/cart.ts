@@ -20,6 +20,8 @@ export type CartLine = {
 
 type CartState = {
   lines: CartLine[];
+  pendingCheckout: string | null;
+  setPendingCheckout: (cartId: string | null) => void;
   add: (product: Product, variant: Variant, quantity?: number) => void;
   setQuantity: (variantId: string, quantity: number) => void;
   remove: (variantId: string) => void;
@@ -33,6 +35,8 @@ export const useCart = create<CartState>()(
   persist(
     (set) => ({
       lines: [],
+      pendingCheckout: null,
+      setPendingCheckout: (pendingCheckout) => set({ pendingCheckout }),
       add: (product, variant, quantity = 1) =>
         set(({ lines }) => {
           const existing = lines.find((l) => l.variantId === variant.id);
@@ -62,7 +66,7 @@ export const useCart = create<CartState>()(
           lines: lines.map((l) => (l.variantId === variantId ? { ...l, quantity: clamp(quantity, l.maxQuantity) } : l)),
         })),
       remove: (variantId) => set(({ lines }) => ({ lines: lines.filter((l) => l.variantId !== variantId) })),
-      clear: () => set({ lines: [] }),
+      clear: () => set({ lines: [], pendingCheckout: null }),
       reconcile: (snapshots) =>
         set(({ lines }) => ({
           lines: lines.map((l) => {
@@ -82,7 +86,7 @@ export const useCart = create<CartState>()(
       name: `cart:${store.id}`,
       version: 1,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: ({ lines }) => ({ lines }),
+      partialize: ({ lines, pendingCheckout }) => ({ lines, pendingCheckout }),
     },
   ),
 );

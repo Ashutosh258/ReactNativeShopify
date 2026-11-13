@@ -87,6 +87,10 @@ export const CART_CREATE = /* GraphQL */ `
 `;
 
 // Server-synced cart operations used once the cart lives on Shopify (see ARCHITECTURE.md).
+export const CART_STATUS = /* GraphQL */ `
+  query CartStatus($id: ID!) { cart(id: $id) { id } }
+`;
+
 export const CART_QUERY = /* GraphQL */ `
   query Cart($id: ID!) { cart(id: $id) { ...CartFields } }
   ${CART_FIELDS}

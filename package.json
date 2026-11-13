@@ -35,7 +35,8 @@
     "store:athlx": "node scripts/store.mjs athlx",
     "store:verde": "node scripts/store.mjs verde",
     "typecheck": "tsc --noEmit",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "shopify": "node --experimental-strip-types --no-warnings scripts/shopify-admin.mjs"
   },
   "private": true
 }

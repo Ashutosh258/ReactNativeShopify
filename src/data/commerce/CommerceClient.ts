@@ -6,6 +6,7 @@ export interface CommerceClient {
   getProduct(handle: string): Promise<Product>;
   getVariants(ids: string[]): Promise<VariantSnapshot[]>;
   createCheckout(lines: CheckoutLine[]): Promise<Checkout>;
+  isCheckoutCompleted(cartId: string): Promise<boolean>;
 }
 
 export class CommerceError extends Error {

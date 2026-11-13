@@ -6,6 +6,7 @@ import { EmptyView, ErrorView, LoadingView } from '@/components/StateViews';
 import { store } from '@/config';
 import { commerce } from '@/data/commerce';
 import { useAsync } from '@/hooks/useAsync';
+import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 import { useSubtotal } from '@/state/cart';
 import { common, theme } from '@/theme';
 
@@ -13,6 +14,7 @@ export default function Home() {
   const handle = store.catalog.homeCollection;
   const collection = useAsync(`collection:${handle}`, () => commerce.getCollection(handle));
   const subtotal = useSubtotal();
+  useRefreshOnFocus(collection.refresh);
 
   if (collection.status === 'loading') return <LoadingView label="Loading products…" />;
   if (collection.status === 'error') return <ErrorView message={collection.error.message} onRetry={collection.reload} />;
@@ -26,7 +28,7 @@ export default function Home() {
         numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={collection.reload} />}
+        refreshControl={<RefreshControl refreshing={collection.refreshing} onRefresh={collection.refresh} />}
         ListHeaderComponent={
           <View style={styles.header}>
             <View style={[styles.hero, { backgroundColor: theme.colors.primary, borderRadius: theme.radius }]}>

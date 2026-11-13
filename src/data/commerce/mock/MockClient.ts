@@ -58,4 +58,8 @@ export class MockClient implements CommerceClient {
     const cartId = `gid://shopify/Cart/sample-${Date.now()}`;
     return { cartId, checkoutUrl: `https://${this.options.storeId}.example.com/checkouts/sample`, isSample: true };
   }
+
+  async isCheckoutCompleted(): Promise<boolean> {
+    return false;
+  }
 }

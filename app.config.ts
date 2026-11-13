@@ -12,6 +12,7 @@ if (!fs.existsSync(storeFile)) {
   throw new Error(`Unknown STORE "${storeId}". Expected one of: ${known.join(', ')}`);
 }
 const store: StoreConfig = JSON.parse(fs.readFileSync(storeFile, 'utf8'));
+const live = !!process.env.SHOPIFY_DOMAIN && (process.env.SHOPIFY_STORE_ID ?? 'athlx') === storeId;
 
 const config: ExpoConfig = {
   name: store.build.appName,
@@ -46,7 +47,7 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: true },
   extra: {
     storeId,
-    shopify: process.env.SHOPIFY_DOMAIN
+    shopify: live
       ? {
           domain: process.env.SHOPIFY_DOMAIN,
           storefrontToken: process.env.SHOPIFY_STOREFRONT_TOKEN ?? '',

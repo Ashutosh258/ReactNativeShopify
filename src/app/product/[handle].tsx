@@ -1,6 +1,6 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { Price } from '@/components/Price';
@@ -11,6 +11,7 @@ import { VariantSelector } from '@/components/VariantSelector';
 import { commerce } from '@/data/commerce';
 import type { Product } from '@/data/types';
 import { useAsync } from '@/hooks/useAsync';
+import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 import { useCart } from '@/state/cart';
 import { common, theme } from '@/theme';
 import { findVariant, initialSelection } from '@/utils/variants';
@@ -18,13 +19,14 @@ import { findVariant, initialSelection } from '@/utils/variants';
 export default function ProductScreen() {
   const { handle } = useLocalSearchParams<{ handle: string }>();
   const product = useAsync(`product:${handle}`, () => commerce.getProduct(handle));
+  useRefreshOnFocus(product.refresh);
 
   if (product.status === 'loading') return <LoadingView />;
   if (product.status === 'error') return <ErrorView message={product.error.message} onRetry={product.reload} />;
-  return <ProductDetails key={product.data.id} product={product.data} />;
+  return <ProductDetails key={product.data.id} product={product.data} refreshing={product.refreshing} onRefresh={product.refresh} />;
 }
 
-function ProductDetails({ product }: { product: Product }) {
+function ProductDetails({ product, refreshing, onRefresh }: { product: Product; refreshing: boolean; onRefresh: () => void }) {
   const [selection, setSelection] = useState(() => initialSelection(product));
   const [added, setAdded] = useState(false);
   const variant = findVariant(product, selection);
@@ -54,7 +56,7 @@ function ProductDetails({ product }: { product: Product }) {
   return (
     <View style={common.screen}>
       <Stack.Screen options={{ title: product.productType }} />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <ProductImage
           url={preview?.image?.url ?? product.featuredImage?.url ?? null}
           swatch={preview?.swatch ?? null}

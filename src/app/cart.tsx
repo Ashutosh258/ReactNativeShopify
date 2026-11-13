@@ -1,7 +1,7 @@
 import { router, useFocusEffect } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { useCallback, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { AppState, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { FreeShippingBar } from '@/components/FreeShippingBar';
@@ -22,6 +22,18 @@ export default function Cart() {
   const [syncError, setSyncError] = useState<string | null>(null);
   const [checkingOut, setCheckingOut] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  const checkOrder = useCallback(async () => {
+    const { pendingCheckout, clear } = useCart.getState();
+    if (!pendingCheckout) return;
+    try {
+      if (await commerce.isCheckoutCompleted(pendingCheckout)) {
+        clear();
+        setOrderPlaced(true);
+      }
+    } catch {}
+  }, []);
 
   const refresh = useCallback(async () => {
     const ids = useCart.getState().lines.map((l) => l.variantId);
@@ -41,9 +53,14 @@ export default function Cart() {
 
   useFocusEffect(
     useCallback(() => {
-      refresh();
-    }, [refresh]),
+      checkOrder().then(refresh);
+    }, [checkOrder, refresh]),
   );
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => state === 'active' && checkOrder());
+    return () => sub.remove();
+  }, [checkOrder]);
 
   const unavailable = lines.filter((l) => !l.available);
 
@@ -59,7 +76,11 @@ export default function Cart() {
       }
       const result = await commerce.createCheckout(current.map((l) => ({ variantId: l.variantId, quantity: l.quantity })));
       if (result.isSample) router.push({ pathname: '/checkout', params: { url: result.checkoutUrl } });
-      else await WebBrowser.openBrowserAsync(result.checkoutUrl);
+      else {
+        useCart.getState().setPendingCheckout(result.cartId);
+        await WebBrowser.openBrowserAsync(result.checkoutUrl);
+        await checkOrder();
+      }
     } catch (e) {
       setNotice(`Checkout unavailable: ${(e as Error).message}`);
     } finally {
@@ -71,8 +92,8 @@ export default function Cart() {
     return (
       <View style={common.screen}>
         <EmptyView
-          title="Your bag is empty"
-          body="Items you add will be saved here, even if you close the app."
+          title={orderPlaced ? 'Order placed' : 'Your bag is empty'}
+          body={orderPlaced ? 'Thanks! Your order is confirmed. Shopify emails the receipt.' : 'Items you add will be saved here, even if you close the app.'}
           action={{ label: 'Start shopping', onPress: () => router.dismissTo('/home') }}
         />
       </View>

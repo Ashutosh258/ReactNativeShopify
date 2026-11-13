@@ -3,6 +3,7 @@ import { CommerceError } from '../CommerceClient';
 import type { Checkout, CheckoutLine, Collection, Money, Product, Variant, VariantSnapshot } from '../../types';
 import {
   CART_CREATE,
+  CART_STATUS,
   COLLECTION_PRODUCTS,
   PRODUCT_BY_HANDLE,
   VARIANT_SNAPSHOTS,
@@ -138,5 +139,10 @@ export class ShopifyClient implements CommerceClient {
     const { cart, userErrors } = data.cartCreate;
     if (!cart) throw new CommerceError(userErrors[0]?.message ?? 'Could not start checkout', false);
     return { cartId: cart.id, checkoutUrl: cart.checkoutUrl, isSample: false };
+  }
+
+  async isCheckoutCompleted(cartId: string): Promise<boolean> {
+    const data = await this.request<{ cart: { id: string } | null }>(CART_STATUS, { id: cartId });
+    return data.cart === null;
   }
 }

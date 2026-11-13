@@ -10,6 +10,7 @@ const LOADING = { status: 'loading', data: undefined, error: undefined } as cons
 export function useAsync<T>(key: string, fn: () => Promise<T>) {
   const fnRef = useRef(fn);
   const [attempt, setAttempt] = useState(0);
+  const [silent, setSilent] = useState(false);
   const [settled, setSettled] = useState<{ token: string; result: Result<T> } | null>(null);
   const token = `${key}#${attempt}`;
 
@@ -28,8 +29,18 @@ export function useAsync<T>(key: string, fn: () => Promise<T>) {
     };
   }, [token]);
 
-  const reload = useCallback(() => setAttempt((a) => a + 1), []);
-  const result: Result<T> = settled?.token === token ? settled.result : LOADING;
+  const reload = useCallback(() => {
+    setSilent(false);
+    setAttempt((a) => a + 1);
+  }, []);
+  const refresh = useCallback(() => {
+    setSilent(true);
+    setAttempt((a) => a + 1);
+  }, []);
 
-  return { ...result, reload };
+  const current = settled?.token === token ? settled.result : null;
+  const stale = silent && settled?.result.status === 'success' ? settled.result : null;
+  const result: Result<T> = current ?? stale ?? LOADING;
+
+  return { ...result, reload, refresh, refreshing: !current && !!stale };
 }

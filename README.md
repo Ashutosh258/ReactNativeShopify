@@ -34,13 +34,7 @@ Simulate a network failure on the first request of each session, to see the erro
 node scripts/store.mjs athlx --simulate-errors
 ```
 
-Connect a real Shopify development store (Storefront API, public token):
-
-```bash
-SHOPIFY_DOMAIN=your-store.myshopify.com SHOPIFY_STOREFRONT_TOKEN=xxxx STORE=athlx npx expo start --clear
-```
-
-The store's collection handle must match `catalog.homeCollection` in the store config. `quantityAvailable` needs the `unauthenticated_read_product_inventory` scope.
+Connect a real Shopify development store: see **[SHOPIFY_SETUP.md](SHOPIFY_SETUP.md)**. It covers creating the store and loading the catalogue with `npm run shopify -- seed`. It also has two demos: stock changed in Admin showing up in the app, and a test order placed from the app.
 
 Other checks:
 
@@ -81,10 +75,11 @@ To build a store-specific binary: `STORE=verde npx eas-cli@latest build --profil
 |---|---|
 | Android emulator (Pixel 9 Pro XL, Expo Go 58) | ✅ Welcome, home, product, add to bag, cart persistence after force-stop and relaunch |
 | Web (react-native-web, 375×812 mobile viewport) | ✅ Full journey for both stores, error/retry, reviews success and outage, sample checkout |
+| Web against a live Shopify dev store | ✅ Live catalogue. A stock change made through the Admin API showed up after returning to the product page. Checkout reaches Shopify (dev store password page first) |
 | iOS | ⚠️ Not tested: no macOS/Xcode available. The code uses only cross-platform Expo modules. Run with `npx expo start` → `i`, or Expo Go on an iPhone |
 
 ## Project notes
 
 - **AI tools:** Claude Code (Claude Opus) for implementation, testing in the browser and Android emulator, and docs.
 - **Issue corrected:** an unstable Zustand selector (`selectSubtotal` returned a new object each render) crashed add-to-cart with "Maximum update depth exceeded". It was replaced with a memoized `useSubtotal()`. See ARCHITECTURE.md §13 for the others.
-- **Unfinished:** live Shopify store not connected, Checkout Kit (needs a dev build), customer login, server-synced cart, real imagery, automated tests.
+- **Unfinished:** Checkout Kit (needs a dev build), customer login, server-synced cart, real imagery, automated tests.

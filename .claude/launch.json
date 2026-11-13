@@ -4,14 +4,39 @@
     {
       "name": "web-athlx",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["expo", "start", "--web", "--port", "8081"],
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--web",
+        "--port",
+        "8081"
+      ],
       "port": 8081
     },
     {
       "name": "web-verde-errors",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["scripts/store.mjs", "verde", "--simulate-errors", "--web", "--port", "8082"],
+      "runtimeArgs": [
+        "scripts/store.mjs",
+        "verde",
+        "--simulate-errors",
+        "--web",
+        "--port",
+        "8082"
+      ],
       "port": 8082
+    },
+    {
+      "name": "web-live",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/store.mjs",
+        "athlx",
+        "--web",
+        "--port",
+        "8083"
+      ],
+      "port": 8083
     }
   ]
 }
